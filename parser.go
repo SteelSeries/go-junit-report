@@ -129,6 +129,10 @@ func Parse(r io.Reader) (*Report, error) {
 
                 test.Name = matches[2]
                 test.Time = parseTime(matches[3]) * 10
+                pkg := report.Packages[len(report.Packages)-1]
+                pkg.Name = matches[2]
+                pkg.Time = parseTime(matches[3]) * 10
+
             } else if strings.HasPrefix(line, "\t") {
                 // test output
                 test.Output = append(test.Output, line[1:])
