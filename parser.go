@@ -80,11 +80,12 @@ func Parse(r io.Reader) (*Report, error) {
                 test = nil
             }
 
+            testCount, _ := strconv.Atoi(matches[1])
             report.Packages = append(report.Packages, Package{
                 Name:      matches[2],
                 Time:      parseTime(matches[3]),
                 Tests:     tests,
-                TestCount: strconv.Atoi(matches[1]),
+                TestCount: testCount,
                 FailCount: 0,
             })
 
@@ -96,12 +97,14 @@ func Parse(r io.Reader) (*Report, error) {
                 test = nil
             }
 
+            testCount, _ := strconv.Atoi(matches[1])
+            failCount, _ := strconv.Atoi(matches[2])
             report.Packages = append(report.Packages, Package{
                 Name:      matches[2],
                 Time:      parseTime(matches[3]),
                 Tests:     tests,
-                TestCount: strconv.Atoi(matches[1]),
-                FailCount: strconv.Atoi(matches[2]),
+                TestCount: testCount,
+                FailCount: failCount,
             })
 
             tests = make([]Test, 0)
