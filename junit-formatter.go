@@ -52,6 +52,7 @@ func JUnitReportXML(report *Report, w io.Writer) error {
 
     // convert Report to JUnit test suites
     for _, pkg := range report.Packages {
+        println("formatting package:", pkg.Name)
         ts := JUnitTestSuite{
             Tests:      pkg.TestCount,
             Failures:   pkg.FailCount,
