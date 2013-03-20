@@ -63,14 +63,15 @@ func Parse(r io.Reader) (*Report, error) {
 
         line := string(l)
         println("processing:", line)
-        if strings.HasPrefix(line, "=== RUN ") {
+        if strings.HasPrefix(line, "FAIL: ") {
             // start of a new test
+            println("found test failure:", line[6:])
             if test != nil {
                 tests = append(tests, *test)
             }
 
             test = &Test{
-                Name:   line[8:],
+                Name:   line[6:],
                 Result: FAIL,
                 Output: make([]string, 0),
             }
