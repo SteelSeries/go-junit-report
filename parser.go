@@ -75,6 +75,7 @@ func Parse(r io.Reader) (*Report, error) {
                 Output: make([]string, 0),
             }
         } else if matches := regexPassed.FindStringSubmatch(line); len(matches) == 2 {
+            println("matched pass string")
             // all tests in this package are finished
             if test != nil {
                 tests = append(tests, *test)
@@ -90,6 +91,7 @@ func Parse(r io.Reader) (*Report, error) {
 
             tests = make([]Test, 0)
         } else if matches := regexFailed.FindStringSubmatch(line); len(matches) == 3 {
+            println("matched fail string")
             // all tests in this package are finished
             if test != nil {
                 tests = append(tests, *test)
