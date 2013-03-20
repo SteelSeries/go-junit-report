@@ -62,10 +62,8 @@ func Parse(r io.Reader) (*Report, error) {
         }
 
         line := string(l)
-        println("processing:", line)
         if strings.HasPrefix(line, "FAIL: ") {
             // start of a new test
-            println("found test failure:", line[6:])
             if test != nil {
                 tests = append(tests, *test)
             }
@@ -76,7 +74,6 @@ func Parse(r io.Reader) (*Report, error) {
                 Output: make([]string, 0),
             }
         } else if matches := regexPassed.FindStringSubmatch(line); len(matches) == 2 {
-            println("matched pass string")
             // all tests in this package are finished
             if test != nil {
                 tests = append(tests, *test)
@@ -92,7 +89,6 @@ func Parse(r io.Reader) (*Report, error) {
 
             tests = make([]Test, 0)
         } else if matches := regexFailed.FindStringSubmatch(line); len(matches) == 3 {
-            println("matched fail string")
             // all tests in this package are finished
             if test != nil {
                 tests = append(tests, *test)
@@ -109,19 +105,14 @@ func Parse(r io.Reader) (*Report, error) {
 
             tests = make([]Test, 0)
         } else if matches := regexResult.FindStringSubmatch(line); len(matches) == 4 {
-            println("matched regexResult")
             // all tests in this package are finished
             if test != nil {
                 tests = append(tests, *test)
                 test = nil
             }
 
-            println("setting package name to", matches[2])
-            println("number of packages:", len(report.Packages))
             pkg := report.Packages[len(report.Packages)-1]
-            println("package test count", pkg.TestCount)
             pkg.Name = matches[2]
-            println("set package name to", pkg.Name)
             pkg.Time = parseTime(matches[3])
             //            pkg.Tests = tests
             report.Packages[len(report.Packages)-1] = pkg
