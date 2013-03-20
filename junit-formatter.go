@@ -71,25 +71,25 @@ func JUnitReportXML(report *Report, w io.Writer) error {
         ts.Properties = append(ts.Properties, NewJUnitProperty("go.version", runtime.Version()))
 
         // individual test cases
-        for _, test := range pkg.Tests {
-            testCase := JUnitTestCase{
-                Classname: classname,
-                Name:      test.Name,
-                Time:      formatTime(test.Time),
-                Failure:   nil,
-            }
+        // for _, test := range pkg.Tests {
+        //     testCase := JUnitTestCase{
+        //         Classname: classname,
+        //         Name:      test.Name,
+        //         Time:      formatTime(test.Time),
+        //         Failure:   nil,
+        //     }
 
-            if test.Result == FAIL {
+        //     if test.Result == FAIL {
 
-                testCase.Failure = &JUnitFailure{
-                    Message:  "Failed",
-                    Type:     "",
-                    Contents: strings.Join(test.Output, "\n"),
-                }
-            }
+        //         testCase.Failure = &JUnitFailure{
+        //             Message:  "Failed",
+        //             Type:     "",
+        //             Contents: strings.Join(test.Output, "\n"),
+        //         }
+        //     }
 
-            ts.TestCases = append(ts.TestCases, testCase)
-        }
+        //     ts.TestCases = append(ts.TestCases, testCase)
+        // }
 
         suites = append(suites, ts)
     }
