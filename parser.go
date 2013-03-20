@@ -62,7 +62,7 @@ func Parse(r io.Reader) (*Report, error) {
         }
 
         line := string(l)
-
+        println("processing:", line)
         if strings.HasPrefix(line, "=== RUN ") {
             // start of a new test
             if test != nil {
@@ -106,6 +106,7 @@ func Parse(r io.Reader) (*Report, error) {
 
             tests = make([]Test, 0)
         } else if matches := regexResult.FindStringSubmatch(line); len(matches) == 4 {
+            println("matched regexResult")
             // all tests in this package are finished
             if test != nil {
                 tests = append(tests, *test)
