@@ -115,7 +115,7 @@ func Parse(r io.Reader) (*Report, error) {
                 test = nil
             }
 
-            println("setting package name to", matched[2])
+            println("setting package name to", matches[2])
 
             pkg := report.Packages[len(report.Packages)-1]
             pkg.Name = matches[2]
