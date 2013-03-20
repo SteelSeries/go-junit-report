@@ -49,6 +49,7 @@ func NewJUnitProperty(name, value string) JUnitProperty {
 // in the format described at http://windyroad.org/dl/Open%20Source/JUnit.xsd
 func JUnitReportXML(report *Report, w io.Writer) error {
     suites := []JUnitTestSuite{}
+    println("number of packages:", len(report.Packages))
 
     // convert Report to JUnit test suites
     for _, pkg := range report.Packages {
