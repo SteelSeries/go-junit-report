@@ -123,6 +123,7 @@ func Parse(r io.Reader) (*Report, error) {
             println("set package name to", pkg.Name)
             pkg.Time = parseTime(matches[3])
             pkg.Tests = tests
+            report.Packages[len(report.Packages)-1] = pkg
 
             tests = make([]Test, 0)
         } else if test != nil {
