@@ -38,6 +38,7 @@ var (
     regexStatus = regexp.MustCompile(`^--- (PASS|FAIL): (.+) \((\d+\.\d+) seconds\)$`)
     regexPassed = regexp.MustCompile(`^OK: (\d+) passed$`)
     regexFailed = regexp.MustCompile(`^OOPS: (\d+) passed, (\d+) FAILED$`)
+    regexResult = regexp.MustCompile(`^(ok|FAIL)\s+(.+)\s(\d+\.\d+)s$`)
 )
 
 func Parse(r io.Reader) (*Report, error) {
@@ -95,13 +96,26 @@ func Parse(r io.Reader) (*Report, error) {
                 test = nil
             }
 
-            testCount, _ := strconv.Atoi(matches[1])
+            passCount, _ := strconv.Atoi(matches[1])
             failCount, _ := strconv.Atoi(matches[2])
             report.Packages = append(report.Packages, Package{
                 Tests:     tests,
-                TestCount: testCount,
+                TestCount: passCount + failCount,
                 FailCount: failCount,
             })
+
+            tests = make([]Test, 0)
+        } else if matches := regexResult.FindStringSubmatch(line); len(matches) == 4 {
+            // all tests in this package are finished
+            if test != nil {
+                tests = append(tests, *test)
+                test = nil
+            }
+
+            pkg := report.Packages[len(report.Packages)-1]
+            pkg.Name = matches[2]
+            pkg.Time = parseTime(matches[3])
+            pkg.Tests = tests
 
             tests = make([]Test, 0)
         } else if test != nil {

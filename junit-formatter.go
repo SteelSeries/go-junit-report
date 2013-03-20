@@ -79,7 +79,6 @@ func JUnitReportXML(report *Report, w io.Writer) error {
             }
 
             if test.Result == FAIL {
-                ts.Failures += 1
 
                 testCase.Failure = &JUnitFailure{
                     Message:  "Failed",
