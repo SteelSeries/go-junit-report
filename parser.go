@@ -38,7 +38,7 @@ var (
     regexStatus = regexp.MustCompile(`^--- (PASS|FAIL): (.+) \((\d+\.\d+) seconds\)$`)
     regexPassed = regexp.MustCompile(`^OK: (\d+) passed$`)
     regexFailed = regexp.MustCompile(`^OOPS: (\d+) passed, (\d+) FAILED$`)
-    regexResult = regexp.MustCompile(`^(ok|FAIL)\s+(.+)\s(\d+\.\d+)s$`)
+    regexResult = regexp.MustCompile(`^(ok|FAIL)\s+(.+)\s+(\d+\.\d+)s$`)
 )
 
 func Parse(r io.Reader) (*Report, error) {
@@ -105,19 +105,19 @@ func Parse(r io.Reader) (*Report, error) {
             })
 
             tests = make([]Test, 0)
-            // } else if matches := regexResult.FindStringSubmatch(line); len(matches) == 4 {
-            //     // all tests in this package are finished
-            //     if test != nil {
-            //         tests = append(tests, *test)
-            //         test = nil
-            //     }
+        } else if matches := regexResult.FindStringSubmatch(line); len(matches) == 4 {
+            // all tests in this package are finished
+            if test != nil {
+                tests = append(tests, *test)
+                test = nil
+            }
 
-            //     pkg := report.Packages[len(report.Packages)-1]
-            //     pkg.Name = matches[2]
-            //     pkg.Time = parseTime(matches[3])
-            //     pkg.Tests = tests
+            pkg := report.Packages[len(report.Packages)-1]
+            pkg.Name = matches[2]
+            pkg.Time = parseTime(matches[3])
+            pkg.Tests = tests
 
-            //     tests = make([]Test, 0)
+            tests = make([]Test, 0)
         } else if test != nil {
             if matches := regexStatus.FindStringSubmatch(line); len(matches) == 4 {
                 // test status
@@ -129,9 +129,6 @@ func Parse(r io.Reader) (*Report, error) {
 
                 test.Name = matches[2]
                 test.Time = parseTime(matches[3]) * 10
-                pkg := report.Packages[len(report.Packages)-1]
-                pkg.Name = matches[2]
-                pkg.Time = parseTime(matches[3]) * 10
 
             } else if strings.HasPrefix(line, "\t") {
                 // test output
