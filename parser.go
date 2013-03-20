@@ -120,6 +120,7 @@ func Parse(r io.Reader) (*Report, error) {
             pkg := report.Packages[len(report.Packages)-1]
             println("package test count", pkg.TestCount)
             pkg.Name = matches[2]
+            println("set package name to", pkg.Name)
             pkg.Time = parseTime(matches[3])
             pkg.Tests = tests
 
